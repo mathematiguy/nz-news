@@ -7,9 +7,9 @@ UID ?= $(shell id -u)
 GID ?= $(shell id -g)
 
 crawl: news/nzherald_ids.txt
-	cd news && $(RUN) scrapy crawl nzherald -o nzherald.json -t jsonlines
+	cd news && $(RUN) scrapy crawl nzherald -o nzherald.json -t jsonlines -s JOBDIR=news/crawls/nzheraldspider.crawl
 
-news/nzherald_ids.txt: news/nzherald.json
+news/nzherald_ids.txt:
 	$(RUN) cat $< | \
 		   grep -oE 'objectid=[0-9]+' | \
 		   grep -oE '[0-9]+' | \

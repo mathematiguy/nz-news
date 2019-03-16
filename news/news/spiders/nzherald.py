@@ -6,6 +6,7 @@ from scrapy.linkextractors import LinkExtractor
 
 def remove_tags(s):
     tags_match = re.compile('<[^>]+>')
+    s = s.replace("<br>", "\n")
     return tags_match.sub('', s)
 
 
@@ -30,7 +31,8 @@ class NzheraldSpider(CrawlSpider):
             LinkExtractor(
                 unique=True,
                 allow=('objectid=\d+', ),
-                deny=("objectid=%s" % s for s in object_ids)),
+                deny=("objectid=%s" % s for s in object_ids)
+                ),
             callback='parse_article',
             follow=True
         ),
@@ -44,7 +46,7 @@ class NzheraldSpider(CrawlSpider):
             object_id = object_id.group(1)
         else:
             logging.debug("Filtering request to parse: {}".format(response.url))
-            yield []
+            return
 
         date = response.xpath('//div[contains(@class, "publish")]/text()').extract()
         date = ' '.join(date).strip()

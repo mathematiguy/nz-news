@@ -1,3 +1,4 @@
 **.pyc
 news/*.json
 news/*.txt
+news/news/crawls/nzheraldspider.crawl
