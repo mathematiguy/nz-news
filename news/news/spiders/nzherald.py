@@ -21,22 +21,30 @@ class NzheraldSpider(CrawlSpider):
     allowed_domains = ['www.nzherald.co.nz']
     start_urls = ['https://www.nzherald.co.nz/']
 
-    with open("nzherald_ids.txt", "w") as f:
+    with open("nzherald_ids.txt", "r") as f:
         object_ids = f.read().strip().split("\n")
 
     rules = (
-        # Follow all links (in allowed domains)
-        Rule(LinkExtractor()),
-
         # Extract links containing an objectid and parse them with the spider's method parse_article
-        Rule(LinkExtractor(
-            allow=('objectid=\d+', ),
-            deny=("|".join("object_id=%s" % s for s in object_ids),)),
-
-        callback='parse_article'),
+        Rule(
+            LinkExtractor(
+                unique=True,
+                allow=('objectid=\d+', ),
+                deny=("objectid=%s" % s for s in object_ids)),
+            callback='parse_article',
+            follow=True
+        ),
     )
 
     def parse_article(self, response):
+
+        # append object_id to cache list
+        object_id = re.search("objectid=(\d+)", response.url)
+        if object_id:
+            object_id = object_id.group(1)
+        else:
+            logging.debug("Filtering request to parse: {}".format(response.url))
+            yield []
 
         date = response.xpath('//div[contains(@class, "publish")]/text()').extract()
         date = ' '.join(date).strip()

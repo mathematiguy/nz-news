@@ -6,9 +6,15 @@ RUN ?= docker run $(INTERACT) --rm -v $$(pwd):/work -w /work -u $(UID):$(GID) $(
 UID ?= $(shell id -u)
 GID ?= $(shell id -g)
 
-crawl:
-	cd news && $(RUN) scrapy crawl nzherald -o nzherald.json
+crawl: news/nzherald_ids.txt
+	cd news && $(RUN) scrapy crawl nzherald -o nzherald.json -t jsonlines
 
+news/nzherald_ids.txt: news/nzherald.json
+	$(RUN) cat $< | \
+		   grep -oE 'objectid=[0-9]+' | \
+		   grep -oE '[0-9]+' | \
+		   uniq | \
+		   sort > $@
 
 .PHONY: docker
 docker:

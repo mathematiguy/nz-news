@@ -14,12 +14,12 @@ BOT_NAME = 'news'
 SPIDER_MODULES = ['news.spiders']
 NEWSPIDER_MODULE = 'news.spiders'
 
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'http://github.com/mathematiguy/nz-news - calebjdmoses@gmail.com'
+USER_AGENT = 'https://github.com/mathematiguy/nz-news - calebjdmoses@gmail.com'
 
 # Set output to utf-8
 FEED_EXPORT_ENCODING='utf-8'
+FEED_FORMAT = 'jsonlines'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
