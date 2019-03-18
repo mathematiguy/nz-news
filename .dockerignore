@@ -1,0 +1,4 @@
+news/*.json
+news/*.txt
+news/news/crawls/*.crawl
+data/*

@@ -48,26 +48,21 @@ class NzheraldSpider(CrawlSpider):
             logging.debug("Filtering request to parse: {}".format(response.url))
             return
 
-        date = response.xpath('//div[contains(@class, "publish")]/text()').extract()
-        date = ' '.join(date).strip()
-        
-        headline = response.xpath('//h1/text()').extract()
-
-        subheader = response.xpath('//meta[@itemprop="description"]/@content').extract()
-
-        sponsor = [remove_tags(s) for s in response.xpath('//div[contains(@class, "sponsored-text")]').extract()]
-
-        syndicator_name = response.xpath('//div[contains(@class, "syndicator-name")]/span/text()').extract()
-        
         byline = get_byline(response)
-
+        date = ' '.join(response.xpath('//div[contains(@class, "publish")]/text()').extract()).strip()
+        headline = [remove_tags(p) for p in response.xpath('//h1').extract()]
+        sponsor = [remove_tags(s) for s in response.xpath('//div[contains(@class, "sponsored-text")]').extract()]
+        subheader = response.xpath('//meta[@itemprop="description"]/@content').extract()
+        syndicator_name = response.xpath('//div[contains(@class, "syndicator-name")]/span/text()').extract()
         paragraphs = [remove_tags(p) for p in response.xpath('//p[contains(@class, "element-paragraph")]').extract()]
 
         yield {
             'url': response.url,
+            'byline': byline,
             'date': date,
             'headline': headline,
+            'sponsor': sponsor,
+            'subheader': subheader,
             'syndicator_name': syndicator_name,
-            'byline': byline,
             'paragraphs': paragraphs
         }
