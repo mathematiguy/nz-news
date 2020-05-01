@@ -22,16 +22,13 @@ class NzheraldSpider(CrawlSpider):
     allowed_domains = ['www.nzherald.co.nz']
     start_urls = ['https://www.nzherald.co.nz/']
 
-    with open("nzherald_ids.txt", "r") as f:
-        object_ids = f.read().strip().split("\n")
-
     rules = (
         # Extract links containing an objectid and parse them with the spider's method parse_article
         Rule(
             LinkExtractor(
                 unique=True,
                 allow=('objectid=\d+', ),
-                deny=("objectid=%s" % s for s in object_ids)
+                deny=("objectid={}".format(s) for s in object_ids)
                 ),
             callback='parse_article',
             follow=True
@@ -54,7 +51,7 @@ class NzheraldSpider(CrawlSpider):
         sponsor = [remove_tags(s) for s in response.xpath('//div[contains(@class, "sponsored-text")]').extract()]
         subheader = response.xpath('//meta[@itemprop="description"]/@content').extract()
         syndicator_name = response.xpath('//div[contains(@class, "syndicator-name")]/span/text()').extract()
-        paragraphs = [remove_tags(p) for p in response.xpath('//p[contains(@class, "element-paragraph")]').extract()]
+        paragraphs = [remove_tags(p) for p in response.xpath('//div[@id="article-content"]/p/text()').extract()]
 
         yield {
             'url': response.url,

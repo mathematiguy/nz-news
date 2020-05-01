@@ -1,1 +1,1 @@
-docker: docker.dragonfly.co.nz/nz-news
+docker: badouralix/python-scrapy

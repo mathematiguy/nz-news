@@ -15,7 +15,4 @@ RUN Rscript -e "install.packages('reticulate')"
 COPY requirements.txt /root/requirements.txt
 RUN pip3 install -r /root/requirements.txt
 
-RUN jupyter notebook --generate-config
-RUN echo "c.NotebookApp.ip = 'localhost'" >> /root/.jupyter/jupyter_notebook_config.py
-
 RUN python3 -m nltk.downloader punkt

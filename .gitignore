@@ -1,6 +1,3 @@
 **.pyc
-news/*.json
-news/*.txt
-news/news/crawls/nzheraldspider.crawl
 data/
-notebooks/.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints
