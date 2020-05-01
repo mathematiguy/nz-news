@@ -22,6 +22,8 @@ class NzheraldSpider(CrawlSpider):
     allowed_domains = ['www.nzherald.co.nz']
     start_urls = ['https://www.nzherald.co.nz/']
 
+    object_ids = []
+
     rules = (
         # Extract links containing an objectid and parse them with the spider's method parse_article
         Rule(
