@@ -1,1 +1,1 @@
-docker: badouralix/python-scrapy
+docker: mathematiguy/nz-news:d5eda92
