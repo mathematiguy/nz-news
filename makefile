@@ -6,15 +6,10 @@ RUN ?= docker run $(DOCKER_ARGS) --rm -v $$(pwd):/work -w /work -u $(UID):$(GID)
 UID ?= $(shell id -u)
 GID ?= $(shell id -g)
 
-crawl: data/nzherald_ids.txt
-	$(RUN) scrapy crawl nzherald -o data/nzherald.json -t jsonlines
+crawl: data/nzherald.json
 
-data/nzherald_ids.txt:
-	$(RUN) cat $< | \
-		   grep -oE 'objectid=[0-9]+' | \
-		   grep -oE '[0-9]+' | \
-		   uniq | \
-		   sort > $@
+data/nzherald.json:
+	$(RUN) scrapy crawl nzherald -o data/nzherald.json -t jsonlines
 
 JUPYTER_PASSWORD ?= jupyter
 JUPYTER_PORT ?= 8888
