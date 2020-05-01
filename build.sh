@@ -5,6 +5,7 @@ set -ex
 
 # Set environment variables
 export RUN=
+export LOG_LEVEL=INFO
 
 # Run crawler
 make crawl

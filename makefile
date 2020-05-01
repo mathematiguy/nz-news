@@ -5,11 +5,12 @@ GIT_TAG ?= $(shell git log --oneline | head -n1 | awk '{print $$1}')
 RUN ?= docker run $(DOCKER_ARGS) --rm -v $$(pwd):/work -w /work -u $(UID):$(GID) $(IMAGE)
 UID ?= $(shell id -u)
 GID ?= $(shell id -g)
+LOG_LEVEL ?= DEBUG
 
 crawl: data/nzherald.json
 
 data/nzherald.json:
-	$(RUN) scrapy crawl nzherald -o data/nzherald.json -t jsonlines
+	$(RUN) scrapy crawl nzherald -o data/nzherald.json -t jsonlines  --loglevel $(LOG_LEVEL)
 
 JUPYTER_PASSWORD ?= jupyter
 JUPYTER_PORT ?= 8888
