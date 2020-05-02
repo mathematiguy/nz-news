@@ -5,16 +5,18 @@ GIT_TAG ?= $(shell git log --oneline | head -n1 | awk '{print $$1}')
 RUN ?= docker run $(DOCKER_ARGS) --rm -v $$(pwd):/work -w /work -u $(UID):$(GID) $(IMAGE)
 UID ?= $(shell id -u)
 GID ?= $(shell id -g)
-LOG_LEVEL ?= DEBUG
+LOG_LEVEL ?= INFO
+
+.PHONY: crawl jupyter clean docker docker-push enter enter-root
 
 crawl: data/nzherald.json
 
+.PRECIOUS: data/nzherald.json
 data/nzherald.json:
 	$(RUN) scrapy crawl nzherald -o data/nzherald.json -t jsonlines  --loglevel $(LOG_LEVEL)
 
 JUPYTER_PASSWORD ?= jupyter
 JUPYTER_PORT ?= 8888
-.PHONY: jupyter
 jupyter: UID=root
 jupyter: GID=root
 jupyter: DOCKER_ARGS=-u $(UID):$(GID) --rm -it -p $(JUPYTER_PORT):$(JUPYTER_PORT) -e NB_USER=$$USER -e NB_UID=$(UID) -e NB_GID=$(GID)
@@ -30,21 +32,17 @@ jupyter:
 clean:
 	rm -f data/nzherald_ids.txt data/nzherald.json
 
-.PHONY: docker
 docker:
 	docker build --tag $(IMAGE):$(GIT_TAG) .
 	docker tag $(IMAGE):$(GIT_TAG) $(IMAGE):latest
 
-.PHONY: docker-push
 docker-push:
 	docker push $(IMAGE):$(GIT_TAG)
 
-.PHONY: enter
 enter: DOCKER_ARGS=-it
 enter:
 	$(RUN) bash
 
-.PHONY: enter-root
 enter-root: DOCKER_ARGS=-it
 enter-root: UID=root
 enter-root: GID=root
