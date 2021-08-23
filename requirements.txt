@@ -1,7 +1,7 @@
 cryptography>=2.6.1
 jellyfish==0.7.1
 jupyter==1.0.0
-jupyterlab==0.35.4
+jupyterlab==1.2.21
 matplotlib==3.0.3
 nltk==3.4
 numpy==1.16.2
